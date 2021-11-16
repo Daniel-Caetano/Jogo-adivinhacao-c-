@@ -11,9 +11,15 @@ void abertura() {
 
 int main() {
   const int NUMERO_SECRETO = 42;
-  int chute;
+
+  bool naoAcertou = true;
   bool igual;
   bool maior;
+
+  int chute;
+  int tentativas = 0;
+
+  double pontuacao = 1000.00;
 
   abertura();
 
@@ -25,11 +31,28 @@ int main() {
     maior = chute >= NUMERO_SECRETO;
 
     if (igual) {
-      cout << "Parabéns, você acertou" << endl;
+      system("cls");
+      cout << "\nParabéns, você acertou em " << tentativas << " tentativas"
+           << endl;
+      cout << "Sua pontuação foi de :|" << pontuacao << "|" << endl;
+
+      naoAcertou = false;
     } else if (maior) {
       cout << "Seu chute é maior que o numero secreto!" << endl;
+      double pontosPerdidos = abs(chute - NUMERO_SECRETO) / 2.0;
+      pontuacao = pontuacao - pontosPerdidos;
+      tentativas++;
     } else {
       cout << "Seu chute é menor que o numero secreto!" << endl;
+      double pontosPerdidos = abs(chute - NUMERO_SECRETO) / 2.0;
+      pontuacao = pontuacao - pontosPerdidos;
+      tentativas++;
     }
-  } while (1);
+
+    // if (tentativas - 1 == 5) {
+    // system("cls");
+    // cout << "Você perdeu!!" << endl;
+    // naoAcertou = false;
+    // }
+  } while (naoAcertou);
 }
