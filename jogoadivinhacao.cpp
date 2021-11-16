@@ -32,8 +32,10 @@ int main() {
 
     if (igual) {
       system("cls");
-      cout << "\nParabéns, você acertou em " << tentativas << " tentativas"
-           << endl;
+      cout << "\nParabéns, você acertou em " << cout.precision(2) << tentativas
+           << " tentativas" << endl;
+      cout.precision(2);
+      cout << fixed;
       cout << "Sua pontuação foi de :|" << pontuacao << "|" << endl;
 
       naoAcertou = false;
