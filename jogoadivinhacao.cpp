@@ -2,20 +2,27 @@
 
 using namespace std;
 
-int main() {
+void abertura() {
   system("cls ");
-  const int numeroSecreto = 42;
-  int chute;
-  bool igual = numeroSecreto == chute;
-  bool maior = numeroSecreto >= chute;
-
   cout << "*********************************************" << endl;
   cout << "******BEM VINDOS AO JOGO DA ADIVINHAÇÃO******" << endl;
   cout << "*********************************************" << endl;
+}
+
+int main() {
+  const int NUMERO_SECRETO = 42;
+  int chute;
+  bool igual;
+  bool maior;
+
+  abertura();
+
   do {
 
     cout << "Qual seu chute?" << endl;
     cin >> chute;
+    igual = chute == NUMERO_SECRETO;
+    maior = chute >= NUMERO_SECRETO;
 
     if (igual) {
       cout << "Parabéns, você acertou" << endl;
@@ -24,6 +31,5 @@ int main() {
     } else {
       cout << "Seu chute é menor que o numero secreto!" << endl;
     }
-
   } while (1);
 }
