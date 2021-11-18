@@ -2,6 +2,7 @@
 // 18/11/2021
 // Jogo desenvolvido para acompanhar site do Alura no curso de C++
 
+#include "forca.hpp"
 #include <Windows.h>
 #include <cstdlib>
 #include <ctime>
@@ -32,7 +33,6 @@ bool procura_letra(char chute) {
   }
   return false;
 }
-
 bool nao_acertou() {
   for (char letra : palavraSecreta) {
     if (!chutou[letra]) {
@@ -42,7 +42,6 @@ bool nao_acertou() {
   return false;
 }
 bool nao_enforcou() { return chutesErrados.size() < 5; }
-
 void tabela() {
   for (char letra : palavraSecreta) {
     if (chutou[letra]) {
@@ -52,8 +51,9 @@ void tabela() {
     }
   }
 }
-
 void encerramento() {
+  char adicionar;
+  char jogarNovamente;
   system("cls || clear");
   cout << "\nFim de jogo" << endl;
   if (nao_enforcou()) {
@@ -71,6 +71,23 @@ void encerramento() {
       cout << letra << "|";
     }
   }
+  cout << "Voce gostaria de escrever uma nova palavra? digite (S) ou (N)"
+       << endl;
+
+  cin >> adicionar;
+  if (adicionar == 'S' || adicionar == 's') {
+    adiciona_palavra();
+    cout << "Palavra adicionada!" << endl;
+  } else if (adicionar == 'N' || adicionar == 'n') {
+    cout << "Palavra NAO adicionada!" << endl;
+
+  } else {
+    system("cls || clear");
+    cout << "COMANDO INVALIDO, JOGO SERA ENCERRADO!!" << endl;
+    Sleep(2000);
+  }
+  cout << "\nObrigado por jogar!!" << endl;
+  system("pause");
 }
 void chutes_errados() {
   cout << "Chutes errados: |";
@@ -78,7 +95,6 @@ void chutes_errados() {
     cout << letra << "|";
   }
 }
-
 vector<string> le_arquivo() {
   int qtdPalavra;
   ifstream arquivo;
@@ -101,11 +117,39 @@ vector<string> le_arquivo() {
     exit(0);
   }
 }
-
 void sorteia_palavra() {
   vector<string> palavras = le_arquivo();
   srand(time(NULL));
   palavraSecreta = palavras[rand() % palavras.size()];
+}
+void salvar_arquivo(vector<string> novaLista) {
+
+  ofstream arquivo;
+  arquivo.open("palavra.txt");
+  if (arquivo.is_open()) {
+
+    arquivo << novaLista.size() << endl;
+
+    for (string palavra : novaLista) {
+      arquivo << palavra << endl;
+    }
+    arquivo.close();
+  } else {
+    cout << "Não foi possivel abrir o arquivo" << endl;
+    exit(0);
+  }
+}
+void adiciona_palavra() {
+  string novaPalavra;
+
+  cout << "Digite a nova palavra: " << endl;
+  cin >> novaPalavra;
+
+  vector<string> addPalavra = le_arquivo();
+
+  addPalavra.push_back(novaPalavra);
+
+  salvar_arquivo(addPalavra);
 }
 int main() {
   char chute;
