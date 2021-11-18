@@ -1,4 +1,6 @@
 #include <Windows.h>
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
 
 using namespace std;
@@ -42,7 +44,8 @@ int dificuldade() {
 }
 
 int main() {
-  const int NUMERO_SECRETO = 42;
+  srand(time(NULL));
+  const int NUMERO_SECRETO = rand() % 100;
 
   bool naoAcertou = true;
   bool igual;
