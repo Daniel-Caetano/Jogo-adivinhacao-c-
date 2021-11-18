@@ -3,6 +3,9 @@
 // Jogo desenvolvido para acompanhar site do Alura no curso de C++
 
 #include <Windows.h>
+#include <cstdlib>
+#include <ctime>
+#include <fstream>
 #include <iostream>
 #include <map>
 #include <string>
@@ -10,7 +13,7 @@
 
 using namespace std;
 
-const string _PALAVRA_SECRETA = "MELANCIA";
+string palavraSecreta;
 map<char, bool> chutou;
 vector<char> chutesErrados;
 
@@ -22,7 +25,7 @@ void abertura() {
   cout << endl;
 }
 bool procura_letra(char chute) {
-  for (char letra : _PALAVRA_SECRETA) {
+  for (char letra : palavraSecreta) {
     if (letra == chute) {
       return true;
     }
@@ -31,16 +34,17 @@ bool procura_letra(char chute) {
 }
 
 bool nao_acertou() {
-  for (char letra : _PALAVRA_SECRETA) {
+  for (char letra : palavraSecreta) {
     if (!chutou[letra]) {
       return true;
     }
   }
   return false;
 }
+bool nao_enforcou() { return chutesErrados.size() < 5; }
 
 void tabela() {
-  for (char letra : _PALAVRA_SECRETA) {
+  for (char letra : palavraSecreta) {
     if (chutou[letra]) {
       cout << letra << " ";
     } else {
@@ -49,10 +53,65 @@ void tabela() {
   }
 }
 
-bool nao_enforcou() { return chutesErrados.size() < 5; }
+void encerramento() {
+  system("cls || clear");
+  cout << "\nFim de jogo" << endl;
+  if (nao_enforcou()) {
+    cout << "Parabens, voce ganhou o jogo!" << endl;
+    cout << "Palavra secreta:|" << palavraSecreta << "|" << endl;
+    cout << "Chutes errados:|";
+    for (char letra : chutesErrados) {
+      cout << letra << "|";
+    }
+  } else {
+    cout << "Voce perdeu, tente outra vez!!!" << endl;
+    cout << "Palavra secreta:|" << palavraSecreta << "|" << endl;
+    cout << "Chutes errados:|";
+    for (char letra : chutesErrados) {
+      cout << letra << "|";
+    }
+  }
+}
+void chutes_errados() {
+  cout << "Chutes errados: |";
+  for (char letra : chutesErrados) {
+    cout << letra << "|";
+  }
+}
+
+vector<string> le_arquivo() {
+  int qtdPalavra;
+  ifstream arquivo;
+  arquivo.open("palavra.txt");
+  if (arquivo.is_open()) {
+
+    arquivo >> qtdPalavra;
+    vector<string> palavras;
+
+    for (int i = 0; i < qtdPalavra; i++) {
+      string palavraLida;
+      arquivo >> palavraLida;
+      // cout << "Linha: " << i + 1 << "| Palavra: " << palavraLida << endl;
+      palavras.push_back(palavraLida);
+    }
+    arquivo.close();
+    return palavras;
+  } else {
+    cout << "Não foi possivel abrir o arquivo" << endl;
+    exit(0);
+  }
+}
+
+void sorteia_palavra() {
+  vector<string> palavras = le_arquivo();
+  srand(time(NULL));
+  palavraSecreta = palavras[rand() % palavras.size()];
+}
 int main() {
   char chute;
 
+  sorteia_palavra();
+  le_arquivo();
   abertura();
 
   do {
@@ -70,11 +129,9 @@ int main() {
       chutesErrados.push_back(chute);
     }
 
-    cout << "Chutes errados: |";
-    for (char letra : chutesErrados) {
-      cout << letra << "|";
-    }
+    chutes_errados();
 
     cout << endl;
   } while (nao_enforcou() && nao_acertou());
+  encerramento();
 }
